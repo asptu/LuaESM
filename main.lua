@@ -1,11 +1,14 @@
 local discordia = require('discordia')
 local client = discordia.Client()
 local add = require("./caption")
+local timer = require('timer')
 discordia.extensions.string()
+
 
 
 client:on('ready', function()
 	print('Logged in as '.. client.user.username)
+
 end)
 
 client:on('messageCreate', function(message)
@@ -22,15 +25,19 @@ client:on('messageCreate', function(message)
 
                     local message_sent = message.channel:send('processing...')
 
-                    if msg:len() > 17 then
+                     if string.sub(url, -3) == 'png' then
 
-                        add.long_caption(msg, url, message)
+                        add.caption_image(msg, url, message)
+                        message_sent:delete()
+
+                    elseif string.sub(url, -3) == 'gif' then
+                        add.caption_gif(msg, url, message)
                         message_sent:delete()
 
                     else
 
-                        add.caption(msg, url, message)
-                        message_sent:delete()
+                    message.channel:send('unknown format')
+                    message_sent:delete()
 
                     end
                 end
@@ -51,18 +58,24 @@ client:on('messageCreate', function(message)
 
                     local message_sent = message.channel:send('processing...')
 
+                    if string.sub(url, -3) == 'png' then
 
-                    if msg:len() > 17 then
+                        add.caption_image(msg, url, message)
+                        message_sent:delete()
 
-                        add.long_caption(msg, url, message)
+
+                    elseif string.sub(url, -3) == 'gif' then
+                        add.caption_gif(msg, url, message)
                         message_sent:delete()
 
                     else
 
-                        add.caption(msg, url, message)
-                        message_sent:delete()
+                    message.channel:send('unknown format')
+                    message_sent:delete()
+
 
                     end
+
                 end
             else
                 message.channel:send('cant find content')
@@ -78,15 +91,20 @@ client:on('messageCreate', function(message)
 
             local message_sent = message.channel:send('processing...')
 
-            if msg:len() > 17 then
+            if string.sub(url, -3) == 'png' then
 
-                add.long_caption(msg, url, message)
+                add.caption_image(msg, url, message)
+                message_sent:delete()
+
+
+            elseif string.sub(url, -3) == 'gif' then
+                add.caption_gif(msg, url, message)
                 message_sent:delete()
 
             else
 
-                add.caption(msg, url, message)
-                message_sent:delete()
+            message.channel:send('unknown format')
+            message_sent:delete()
 
             end
 	end
